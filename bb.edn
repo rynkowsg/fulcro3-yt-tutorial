@@ -1,0 +1,5 @@
+{:tasks
+ {:requires ([babashka.fs :as fs])
+  npm-inst (when-not (fs/directory? "node_modules")
+             (shell "npm install"))
+  run      {:depends [npm-inst] :task (shell "npx shadow-cljs watch main")}}}

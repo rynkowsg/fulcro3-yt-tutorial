@@ -1,0 +1,18 @@
+# MacOs
+.DS_Store
+
+# JetBrains
+.idea/
+*.iml
+
+# node
+node_modules/
+
+# shadow-cljs
+.shadow-cljs/
+.cpcache/
+**/cljs-runtime/
+
+# project specific
+# :output-dir defined in shadow-cljs.edn
+resources/public/js/main/
