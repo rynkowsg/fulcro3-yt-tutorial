@@ -1,6 +1,12 @@
-{:deps    {com.fulcrologic/fulcro {:mvn/version "3.5.28"}}
+{:deps    {com.fulcrologic/fulcro {:mvn/version "3.5.28"
+                                   :exclusions  [com.taoensso/encore]} ;; to fix warnings about abs in Clojure 11
+           com.taoensso/encore    {:mvn/version "3.31.0"}}
+
  :aliases {:dev
            {:extra-paths ["dev"]
             :extra-deps  {org.clojure/clojurescript {:mvn/version "1.11.60"}
                           thheller/shadow-cljs      {:mvn/version "2.20.7"}
-                          binaryage/devtools        {:mvn/version "1.0.6"}}}}}
+                          binaryage/devtools        {:mvn/version "1.0.6"}}}
+
+           :graph {:replace-deps {org.clojure/tools.deps.graph {:mvn/version "1.1.68"}}
+                   :ns-default   clojure.tools.deps.graph}}}

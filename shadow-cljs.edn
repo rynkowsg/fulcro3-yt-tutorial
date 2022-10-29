@@ -1,5 +1,6 @@
 {:deps     {:aliases [:dev]}
- :nrepl    {:port 9000}
+ :nrepl    {:init-ns user-clj
+            :port    9000}
 
  :dev-http {8000 "resources/public"}
 
@@ -8,5 +9,8 @@
                    :asset-path "/js/main"
 
                    :modules    {:main {:init-fn app.client/init}}
-                   :devtools   {:after-load app.client/init
-                                :preloads   [com.fulcrologic.fulcro.inspect.preload]}}}}
+                   :devtools   {:repl-init-ns user-cljs
+                                :repl-pprint  true
+                                :after-load   app.client/init
+                                :preloads     [com.fulcrologic.fulcro.inspect.dom-picker-preload
+                                               com.fulcrologic.fulcro.inspect.preload]}}}}
