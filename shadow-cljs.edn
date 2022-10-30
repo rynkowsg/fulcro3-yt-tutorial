@@ -4,6 +4,8 @@
 
  :dev-http {8000 "resources/public"}
 
+ :log      {:level :info}
+
  :builds   {:main {:target     :browser
                    :output-dir "resources/public/js/main"
                    :asset-path "/js/main"
@@ -11,6 +13,7 @@
                    :modules    {:main {:init-fn app.client/init}}
                    :devtools   {:repl-init-ns user-cljs
                                 :repl-pprint  true
+                                :log          true
                                 :after-load   app.client/init
                                 :preloads     [com.fulcrologic.fulcro.inspect.dom-picker-preload
                                                com.fulcrologic.fulcro.inspect.preload]}}}}
