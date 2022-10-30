@@ -27,19 +27,28 @@
                    :person/age  20
                    :person/cars [{:id 40 :model "Leaf"}
                                  {:id 41 :model "Escort"}
-                                 {:id 42 :model "Sienna"}]}}
-  (div :.ui.segment {}
-    (div :.ui.form {}
-      (div :.field {}
-        (label {} "Name: ")
-        name)
-      (div :.field {}
-        (label {} "Age: ")
-        age)
-      (button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
-      (h3 {} "Cars:")
-      (ul {}
-        (map ui-car cars)))))
+                                 {:id 42 :model "Sienna"}]}
+   :shouldComponentUpdate (fn [this props state] true)
+   :componentDidMount (fn [this] (let [p (comp/props this)]
+                                   (js/console.log "Mounted" p)))
+   :initLocalState (fn [this props]
+                     {:a 2
+                      :onClick (fn [evt] (js/console.log "OnClick action"))})}
+  (let [state (comp/get-state this)
+        onClick (comp/get-state this :onClick)]
+    (js/console.log "State" state)
+    (div :.ui.segment {}
+        (div :.ui.form {}
+             (div :.field {}
+                  (label {} "Name: ")
+                  name)
+             (div :.field {}
+                  (label {:onClick onClick} "Age: ")
+                  age)
+             (button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
+             (h3 {} "Cars:")
+             (ul {}
+                 (map ui-car cars))))))
 
 (def ui-person (comp/factory Person {:keyfn :person/id}))
 
@@ -93,3 +102,6 @@
 
   (app/current-state APP)
   (comp/transact! APP [(make-older {:person/id 1})]))
+
+(comment ;; video 4 - Components DOM and React
+  (comp/component-options Person))
