@@ -2,11 +2,12 @@
   (:require
     ["react-number-format" :refer (NumericFormat)]
     [com.fulcrologic.fulcro.application :as app]
-    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+    [com.fulcrologic.fulcro.algorithms.merge :as merge]
     [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
+    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
     [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
-    [com.fulcrologic.fulcro.algorithms.merge :as merge]))
+    [com.fulcrologic.fulcro.rendering.keyframe-render :as keyframe]))
 
 (def ui-number-format (interop/react-factory NumericFormat))
 
@@ -15,13 +16,14 @@
    :ident         :car/id
    :initial-state {:car/id    :param/id
                    :car/model :param/model}}
+  (js/console.log "Render car " id)
   (dom/div "Model: " model))
 
 (def ui-car (comp/factory Car {:keyfn :car/id}))
 
 (defmutation make-older [{:person/keys [id]}]
   (action [{:keys [state]}]
-          (swap! state update-in [:person/id id :person/age] inc)))
+    (swap! state update-in [:person/id id :person/age] inc)))
 
 (defsc Person [this {:person/keys [id name age cars] :as props}]
   {:query         [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
@@ -38,6 +40,7 @@
    :initLocalState (fn [this props]
                      {:a 2
                       :onClick (fn [evt] (js/console.log "OnClick action"))})}
+  (js/console.log "Render person " id)
   (let [state (comp/get-state this)
         onClick (comp/get-state this :onClick)]
     (js/console.log "State" state)
@@ -64,23 +67,25 @@
    :ident (fn [_ _] [:component/id ::person-list])
    :initial-state {:person-list/people [{:id 1 :name "Bob"}
                                         {:id 2 :name "Sally"}]}}
+  (js/console.log "Render list")
   (div
     (h3 "People")
     (map ui-person people)))
 
 (def ui-person-list (comp/factory PersonList))
 
-(defsc Sample [this {:root/keys [people] :as props}]
-  {:query         [{:root/people (comp/get-query PersonList)}]
-   :initial-state {:root/people {}}}
+(defsc Root [this {:root/keys [list] :as props}]
+  {:query         [{:root/list (comp/get-query PersonList)}]
+   :initial-state {:root/list {}}}
+  (js/console.log "Render root")
   (div
-    (when people
-      (ui-person-list people))))
+    (when list
+     (ui-person-list list))))
 
-(defonce APP (app/fulcro-app))
+(defonce APP (app/fulcro-app {:optimized-render! keyframe/render!}))
 
 (defn ^:export init []
-  (app/mount! APP Sample "app"))
+  (app/mount! APP Root "app"))
 
 (comment
   (keys APP)
@@ -110,9 +115,9 @@
     (app/schedule-render! APP))
 
   (comp/get-ident Car {:car/id 22})
-  (comp/get-query Sample)
+  (comp/get-query Root)
   (comp/get-initial-state Person {:id 2 :name "Bob"})
-  (comp/get-initial-state Sample))
+  (comp/get-initial-state Root))
 
 (comment
   (merge/merge-component! APP Person {:person/id 1 :person/name "Joe" :person/age 20} :replace [:root/person])
