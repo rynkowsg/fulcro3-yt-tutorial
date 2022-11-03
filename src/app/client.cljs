@@ -2,12 +2,13 @@
   (:require
     ["react-number-format" :refer (NumericFormat)]
     [com.fulcrologic.fulcro.application :as app]
+    [com.fulcrologic.fulcro.algorithms.denormalize :as fdn]
     [com.fulcrologic.fulcro.algorithms.merge :as merge]
     [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
     [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
-    [com.fulcrologic.fulcro.rendering.keyframe-render :as keyframe]))
+    [com.fulcrologic.fulcro.rendering.ident-optimized-render :as ident-optimized]))
 
 (def ui-number-format (interop/react-factory NumericFormat))
 
@@ -34,7 +35,7 @@
                    :person/cars [{:id 40 :model "Leaf"}
                                  {:id 41 :model "Escort"}
                                  {:id 42 :model "Sienna"}]}
-   :shouldComponentUpdate (fn [this props state] true)
+   ;;:shouldComponentUpdate (fn [this props state] true) ;; true is default React behaviour
    :componentDidMount (fn [this] (let [p (comp/props this)]
                                    (js/console.log "Mounted" p)))
    :initLocalState (fn [this props]
@@ -43,7 +44,7 @@
   (js/console.log "Render person " id)
   (let [state (comp/get-state this)
         onClick (comp/get-state this :onClick)]
-    (js/console.log "State" state)
+    #_(js/console.log "State" state)
     (div :.ui.segment {}
         (div :.ui.form {}
              (div :.field {}
@@ -53,9 +54,13 @@
                (label {} "Amount: ")
                (ui-number-format {:thousandSeparator true :prefix "$"}))
              (div :.field {}
-                  (label {:onClick onClick} "Age: ")
-                  age)
-             (button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
+               (label {:onClick onClick} "Age: ")
+               age)
+             (button :.ui.button {:onClick #(comp/transact!
+                                              this
+                                              `[(make-older ~{:person/id id})]
+                                              {:refresh [:person-list/people]})}
+                     "Make Older")
              (h3 {} "Cars:")
              (ul {}
                  (map ui-car cars))))))
@@ -68,9 +73,12 @@
    :initial-state {:person-list/people [{:id 1 :name "Bob"}
                                         {:id 2 :name "Sally"}]}}
   (js/console.log "Render list")
-  (div
-    (h3 "People")
-    (map ui-person people)))
+  (let [cnt (->> people (reduce (fn [c {:person/keys [age]}] (if (> age 30) (inc c) c)) 0))]
+    (div :.ui.segment
+      (h3 "People")
+      (div "Over 30: " cnt)
+      (ul
+        (map ui-person people)))))
 
 (def ui-person-list (comp/factory PersonList))
 
@@ -79,10 +87,14 @@
    :initial-state {:root/list {}}}
   (js/console.log "Render root")
   (div
+    (h3 "Application")
     (when list
-     (ui-person-list list))))
+      (ui-person-list list))))
 
-(defonce APP (app/fulcro-app {:optimized-render! keyframe/render!}))
+
+;(defonce APP (app/fulcro-app))
+(defonce APP (app/fulcro-app {:optimized-render! ident-optimized/render!})) ;; renders all parent components
+;(defonce APP (app/fulcro-app {:optimized-render! keyframe/render!})) ;; renders all parent components
 
 (defn ^:export init []
   (app/mount! APP Root "app"))
@@ -129,4 +141,40 @@
   (comp/transact! APP [(make-older {:person/id 1})]))
 
 (comment ;; video 4 - Components DOM and React
-  (comp/component-options Person))
+  (comp/component-options Person)
+
+  ;; video 5 - indexes when components mount
+  (comp/class->all APP Person)
+  (comp/class->any APP Person)
+  (comp/prop->classes APP :person/age)
+  (comp/prop->classes APP :car/model))
+
+
+
+(comment
+  ;; video 5 - show me ids of all components rendered
+  (defn get-component-that-query-for-a-prop
+    [prop]
+    (reduce
+      (fn [mounted-instances cls]
+        (concat mounted-instances
+                (comp/class->all APP (comp/registry-key->class cls))))
+      []
+      (comp/prop->classes APP prop)))
+  (->> (get-component-that-query-for-a-prop :person/age)
+       (map comp/get-ident))
+
+  ;; video 5 -
+  (def before (app/current-state APP))
+  (comp/transact! APP [(make-older {:person/id 2})])
+  (def after (app/current-state APP))
+  before
+  after
+
+  ;; get props for the subtree conta ining updated Person [:person/id 1]
+  (let [state (app/current-state APP)
+        component-query (comp/get-query Person)
+        component-ident [:person/id 1]
+        starting-entity (get-in state component-ident)]
+    (fdn/db->tree component-query starting-entity state)))
+
