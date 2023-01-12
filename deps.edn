@@ -1,0 +1,15 @@
+{:paths   ["src" "resources"]
+ :deps    {org.clojure/clojure    {:mvn/version "1.11.1"}
+           com.fulcrologic/fulcro {:mvn/version "3.6.0-RC3"
+                                   :exclusions  [com.taoensso/encore]} ;; to fix warnings about abs in Clojure 11
+           com.taoensso/encore    {:mvn/version "3.45.0"}}
+
+ :aliases {:dev
+           {:extra-paths ["dev"]
+            :extra-deps  {binaryage/devtools           {:mvn/version "1.0.6"}
+                          org.clojure/clojurescript    {:mvn/version "1.11.60"}
+                          org.clojure/tools.deps.alpha {;; https://github.com/clojure/tools.deps.alpha/tree/add-lib3
+                                                        :git/url "https://github.com/clojure/tools.deps.alpha"
+                                                        :sha     "8f8fc2571e721301b6d52e191129248355cb8c5a"}
+                          org.clojure/tools.namespace  {:mvn/version "1.3.0"}
+                          thheller/shadow-cljs         {:mvn/version "2.20.19"}}}}}

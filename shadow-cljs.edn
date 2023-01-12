@@ -1,0 +1,13 @@
+{:deps     {:aliases [:dev]}
+ :nrepl    {:init-ns dev-client.shadow
+            :port    9000}
+
+ ;; port used for hosting the static files only
+ :dev-http {8000 "resources/public"}
+
+ :builds   {:main {:target     :browser
+                   :output-dir "resources/public/js/main"
+                   :asset-path "/js/main"
+                   :modules    {:main {:init-fn app.client/init}}
+                   :devtools   {:after-load app.client/init
+                                :preloads   [com.fulcrologic.fulcro.inspect.preload]}}}}

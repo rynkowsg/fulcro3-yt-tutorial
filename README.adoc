@@ -1,0 +1,32 @@
+= Notes on 'Fulcro 3 YT Tutorial'
+
+:root-dir: .
+
+:yt-fulcro-1: https://www.youtube.com/watch?v=wEjNWUMCX78
+
+== link:{yt-fulcro-1}[Fulcro – Part 1: Getting Started]
+
+video::wEjNWUMCX78[youtube, start=, end=, width=1280, height=720]
+
+=== Content
+
+* initial files
+* intro to IntelliJ Idea
+* how to use Cursive & use REPL from it
+
+=== Commit "part-1: Add bare project"
+
+* bare minimal project, incl.
+ ** deps.edn, shadow-cljs.edn, index.html
+ ** simple client code (cljs) showing "Hello World"
+
+* amended compare to the video
+ ** replaced `def APP` with `defonce APP` (possible bug, https://youtu.be/wEjNWUMCX78?t=253[client in part 1], https://youtu.be/HCVzG2BLRwk?t=3[client part 2])
+ ** added bb.edn
+ ** upgraded to the latest versions
+  *** fulcro: 3.6.0-RC3
+  *** shadow-cljs: 2.20.19
+  *** react & react-dom: 18.2.0
+  *** clojure 1.11.1, clojurescript 1.11.60
+  *** jvm: 11.0.17 (Corretto-11.0.17.8.1)
+ ** because of using react 18, `with-react18` wrapper was used in client.cljs
