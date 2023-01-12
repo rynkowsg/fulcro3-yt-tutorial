@@ -179,3 +179,15 @@ video::{yt-fulcro-4-id}[youtube, start=0, end=, width=1280, height=720]
 * Tony uses local state very commonly for callback functions
 * documentation of `defsc` tells more about these react methods
 * fulcro is really fast in pulling data from internal db so typically overhead is not that big to justify trying to optimize by keeping the state in component local state
+
+==== idents ({yt-fulcro-4}?t=16m26s[16:26]  - {yt-fulcro-4}?t=23m08s[23:08])
+
+* _"it's not uncommon for ust o have components that don't have server identity but for which we do want an identity in our local app database"_
+ ** component that have ident but don't have server identity
+ ** `PersonList` is such an example
+* there are a couple of options to specify ident in the component options map:
+ ** `:ident :person/id`
+ ** `:ident [:PEOPLE :person/id]` - will use `:person/id` for ident but in the db it will use `:PEOPLE` as top name
+ ** `:ident (fn [_ _] [:person/id (:person/id props)])` (equivalent of the first one)
+* _"when we get to a singleton component, where there's only going to one representation in the database, the id part of the ident is constant, and so we don't want it computed at all"_
+ ** in such scenario we could use `:ident (fn [_ _] [:component/id ::person-list])`

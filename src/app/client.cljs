@@ -55,10 +55,25 @@
 
 (def ui-person (comp/factory Person {:keyfn :person/id}))
 
-(defsc Sample [this {:root/keys [person] :as props}]
-  {:query         [{:root/person (comp/get-query Person)}]
-   :initial-state {:root/person {:id 1 :name "Bob"}}}
-  (ui-person person))
+;; We have only one PersonList in the app, therefore we don't need an id for the list.
+(defsc PersonList [this {:person-list/keys [people] :as props}]
+  {:query         [{:person-list/people (comp/get-query Person)}]
+   :ident         (fn [_ _] [:component/id ::person-list])
+   :initial-state {:person-list/people [{:id 1 :name "Bob"}
+                                        {:id 2 :name "Sally"}]}}
+  (div {}
+    (h3 {} "People")
+    (map ui-person people)))
+
+
+(def ui-person-list (comp/factory PersonList))
+
+(defsc Sample [this {:root/keys [people] :as props}]
+  {:query         [{:root/people (comp/get-query PersonList)}]
+   :initial-state {:root/people {}}}
+  (div {}
+    (when people
+      (ui-person-list people))))
 
 (defonce APP (with-react18 (app/fulcro-app {})))
 
