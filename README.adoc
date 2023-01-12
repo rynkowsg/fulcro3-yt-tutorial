@@ -4,11 +4,13 @@
 
 :yt-fulcro-3-id: KJsFLmkdRig
 :yt-fulcro-4-id: vNKYl-5x8Ao
+:yt-fulcro-5-id: JBy_htHxygo
 
 :yt-fulcro-1: https://www.youtube.com/watch?v=wEjNWUMCX78
 :yt-fulcro-2: https://www.youtube.com/watch?v=HCVzG2BLRwk
 :yt-fulcro-3: https://www.youtube.com/watch?v={yt-fulcro-3-id}
 :yt-fulcro-4: https://www.youtube.com/watch?v={yt-fulcro-4-id}
+:yt-fulcro-5: https://www.youtube.com/watch?v={yt-fulcro-5-id}
 
 
 == link:{yt-fulcro-1}[Fulcro – Part 1: Getting Started]
@@ -209,3 +211,24 @@ video::{yt-fulcro-4-id}[youtube, start=0, end=, width=1280, height=720]
 DOM inputs in HTML always take string inputs, and always return string outputs.
 This includes time, date. Always strings. Remember!
 ====
+
+
+== link:{yt-fulcro-5}[Fulcro – Part 5 : How Rendering Works]
+
+video::{yt-fulcro-5-id}[youtube, start=0, end=, width=1280, height=720]
+
+=== Notes
+
+* fulcro laverages all react provides
+* there is overhead with running the query
+* stages
+  ** 1. query
+  ** 2. output of factories (VDOM)
+  ** 3. react DOM diff
+* fulcro optimizes
+* stages
+  ** 1. query - reduce number of queries
+  ** 2. output of factories (VDOM) - reduce the number that need to run period
+  ** 3. react DOM diff (stable keys for react)
+* setting :shouldComponentUpdate to true brings default react behaviour
+  `:shouldComponentUpdate (fn [this props state] true)`
