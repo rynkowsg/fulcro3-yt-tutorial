@@ -167,10 +167,22 @@ The type of data used in examples usually reside on the backend.
 In the initial state we provide only purely clients data.
 ====
 
+===== Mutations _({yt-fulcro-3t}11m18s[11:18])_ =====
+
+* mutation looks like a function, but it returns only data
+* `defmutation` in addition, registers mutation name to access later the effects (`action`, `remote`, etc)
+* `comp/transact!` is used to apply mutation
+* mutation can be visible or not visible at the code level where it is used
+* to use it when it is not visible, quote it (optionally unquote params), although IDE will still highlight it
+* lots of people hold mutations in separate file from the UI (separation between implementation & the view)
+
 ==== Commits ====
 
 * *part-3: Add initial state*
 ** adds initial state for the app, so when reloaded is not empty
+
+* *part-3: Demo mutations with 'make older' btn*
+** adds one button 'make older' that applies mutation to the current user
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
