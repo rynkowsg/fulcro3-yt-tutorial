@@ -6,7 +6,8 @@
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
-   [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]))
+   [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
+   [com.fulcrologic.fulcro.rendering.keyframe-render :as keyframe]))
 
 (def ui-number-format (interop/react-factory NumericFormat))
 
@@ -15,6 +16,7 @@
    :ident         :car/id
    :initial-state {:car/id    :param/id
                    :car/model :param/model}}
+  (js/console.log "Render car" id)
   (div {} "Model: " model))
 
 (def ui-car (comp/factory Car {:keyfn :car/id}))
@@ -24,22 +26,22 @@
     (swap! state update-in [:person/id id :person/age] inc)))
 
 (defsc Person [this {:person/keys [id name age cars] :as props}]
-  {:query                 [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
-   :ident                 :person/id
-   :initial-state         {:person/id   :param/id
-                           :person/name :param/name
-                           :person/age  20
-                           :person/cars [{:id 40 :model "Leaf"}
-                                         {:id 41 :model "Escort"}
-                                         {:id 42 :model "Sienna"}]}
-   :shouldComponentUpdate (fn [this props state] true)
-   :componentDidMount     (fn [this] (let [p (comp/props this)]
-                                       (js/console.log "Mounted" p)))
-   :initLocalState        (fn [this {:person/keys [id name age cars] :as props}]
-                            {:anything :can-be-added-here
-                             :onClick  (fn [evt]
-                                         (comp/transact! this [(make-older {:person/id id})])
-                                         (js/console.log "Made" name "older from cached function"))})}
+  {:query             [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
+   :ident             :person/id
+   :initial-state     {:person/id   :param/id
+                       :person/name :param/name
+                       :person/age  20
+                       :person/cars [{:id 40 :model "Leaf"}
+                                     {:id 41 :model "Escort"}
+                                     {:id 42 :model "Sienna"}]}
+   :componentDidMount (fn [this] (let [p (comp/props this)]
+                                   (js/console.log "Mounted" p)))
+   :initLocalState    (fn [this {:person/keys [id name age cars] :as props}]
+                        {:anything :can-be-added-here
+                         :onClick  (fn [evt]
+                                     (comp/transact! this [(make-older {:person/id id})])
+                                     (js/console.log "Made" name "older from cached function"))})}
+  (js/console.log "Render person" id)
   (let [onClick (comp/get-state this :onClick)]
     (div :.ui.segment {}
       (div :.ui.form {}
@@ -69,6 +71,7 @@
    :ident         (fn [_ _] [:component/id ::person-list])
    :initial-state {:person-list/people [{:id 1 :name "Bob"}
                                         {:id 2 :name "Sally"}]}}
+  (js/console.log "Render person list")
   (div {}
     (h3 {} "People")
     (map ui-person people)))
@@ -76,21 +79,22 @@
 
 (def ui-person-list (comp/factory PersonList))
 
-(defsc Sample [this {:root/keys [people] :as props}]
-  {:query         [{:root/people (comp/get-query PersonList)}]
-   :initial-state {:root/people {}}}
+(defsc Root [this {:root/keys [list] :as props}]
+  {:query         [{:root/list (comp/get-query PersonList)}]
+   :initial-state {:root/list {}}}
+  (js/console.log "Render root")
   (div {}
-    (when people
-      (ui-person-list people))))
+    (h3 {} "Application")
+    (ui-person-list list)))
 
-(defonce APP (app/fulcro-app {}))
+(defonce APP (app/fulcro-app {:optimized-render! keyframe/render!}))
 
 (defn ^:export init []
-  (app/mount! APP Sample "app")
+  (app/mount! APP Root "app")
   (js/console.log "Loaded"))
 
 (defn ^:export refresh []
-  (app/mount! APP Sample "app")
+  (app/mount! APP Root "app")
   (js/console.log "Hot reload"))
 
 
