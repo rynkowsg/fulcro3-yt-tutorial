@@ -3,6 +3,8 @@
 :root-dir: .
 
 :yt-fulcro-1: https://www.youtube.com/watch?v=wEjNWUMCX78
+:yt-fulcro-2: https://www.youtube.com/watch?v=HCVzG2BLRwk
+
 
 == link:{yt-fulcro-1}[Fulcro – Part 1: Getting Started]
 
@@ -30,3 +32,30 @@ video::wEjNWUMCX78[youtube, start=, end=, width=1280, height=720]
   *** clojure 1.11.1, clojurescript 1.11.60
   *** jvm: 11.0.17 (Corretto-11.0.17.8.1)
  ** because of using react 18, `with-react18` wrapper was used in client.cljs
+
+
+== link:{yt-fulcro-2}[Fulcro – Part 2: Normalization ]
+
+video::HCVzG2BLRwk[youtube, start=, end=, width=1280, height=720]
+
+=== Content
+
+* simple layout to list person, their age and they cars
+* more on components (idents, query)
+* `merge-component!`
+* normalized database
+
+=== Notes
+
+- `merge-component!` works by taking an ident from the given data and injecting that into APP
+- you can't merge root component with `merge-component!` (https://youtu.be/HCVzG2BLRwk?t=1017[link])
+- `merge-component!` support replacing particular top thing by added edge (`:replace`)
+- `merge-component!` with `:append` adds an edge to given position
+
+=== Commit "part-2: Demo normalization on simple layout"
+
+* Simple layout includes showing person details:
+ ** name
+ ** age
+ ** cars
+* Comments showing how to merge data to the database
