@@ -207,9 +207,28 @@ because of it, fulcro is able to get you exact same
 code that JSX would generate for you
 * for best performence it is worth to drop the options mape, even if empty, eg. `(div {} ...)` instead of `(div ...)`
 
+===== React lifecycle methods _({yt-fulcro-4t}06:41[06:41])_ =====
+
+* component's map is open, extensible map
+* both `:query` and `:initial-state` can be lambdas
+* in case of dynamic query support, the `:query` has to be lambda (when data requested at runtime might be different than these setup statically)
+* to request component options call `(comp/component-options)`
+* react lifecycle methods are a little special in a way that they have a meaning to react, but `defsc` doesn't do anything to it
+* `:shouldComponentUpdate` - whether should the component reload or not
+* `:componentDidMount`
+* `:initLocalState` - this one is a constructor placeholder for react instance.
+Whatever is added here, goes to React local state. Local state can be accessed via comp/get-state
+it is useful for performance as it.
+* If you need to do anything at the construction time, this is the place.
+* Tony uses local state very commonly for callback functions
+* documentation of `defsc` tells more about these react methods
+* fulcro is really fast in pulling data from internal db so typically overhead is not that big to justify trying to optimize by keeping the state in component local state
+
 ==== Commits ====
 
 * *part-4: Demo styling (use Semantic UI)*
+
+* *part-4: Add sample react lifecycle methods*
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 

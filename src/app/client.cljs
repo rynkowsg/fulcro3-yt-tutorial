@@ -20,26 +20,37 @@
     (swap! state update-in [:person/id id :person/age] inc)))
 
 (defsc Person [this {:person/keys [id name age cars] :as props}]
-  {:query         [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
-   :ident         :person/id
-   :initial-state {:person/id   :param/id
-                   :person/name :param/name
-                   :person/age  20
-                   :person/cars [{:id 40 :model "Leaf"}
-                                 {:id 41 :model "Escort"}
-                                 {:id 42 :model "Sienna"}]}}
-  (div :.ui.segment {}
-    (div :.ui.form {}
-      (div :.field {}
-        (label {} "Name: ")
-        name)
-      (div :.field {}
-        (label {} "Age: ")
-        age))
-    (button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
-    (h3 {} "Cars:")
-    (ul {}
-      (map ui-car cars))))
+  {:query                 [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
+   :ident                 :person/id
+   :initial-state         {:person/id   :param/id
+                           :person/name :param/name
+                           :person/age  20
+                           :person/cars [{:id 40 :model "Leaf"}
+                                         {:id 41 :model "Escort"}
+                                         {:id 42 :model "Sienna"}]}
+   :shouldComponentUpdate (fn [this props state] true)
+   :componentDidMount     (fn [this] (let [p (comp/props this)]
+                                       (js/console.log "Mounted" p)))
+   :initLocalState        (fn [this {:person/keys [id name age cars] :as props}]
+                            {:anything :can-be-added-here
+                             :onClick  (fn [evt]
+                                         (comp/transact! this [(make-older {:person/id id})])
+                                         (js/console.log "Made" name "older from cached function"))})}
+  (let [onClick (comp/get-state this :onClick)]
+    (div :.ui.segment {}
+      (div :.ui.form {}
+        (div :.field {}
+          (label {} "Name: ")
+          name)
+        (div :.field {}
+          (label {:onClick onClick} "Age: ")
+          age))
+      (button {:onClick #(do (comp/transact! this [(make-older {:person/id id})])
+                             (js/console.log "Made" name "older from inline function"))}
+        "Make older")
+      (h3 {} "Cars:")
+      (ul {}
+        (map ui-car cars)))))
 
 (def ui-person (comp/factory Person {:keyfn :person/id}))
 
