@@ -1,0 +1,96 @@
+= Notes on 'Fulcro 3 YT Tutorial'
+:toc:
+:toclevels: 2
+
+:root-dir: .
+
+:yt-fulcro-1-id: wEjNWUMCX78
+:yt-fulcro-2-id: HCVzG2BLRwk
+
+:yt-fulcro-1: https://www.youtube.com/watch?v={yt-fulcro-1-id}
+:yt-fulcro-2: https://www.youtube.com/watch?v={yt-fulcro-2-id}
+
+:yt-fulcro-1t: https://youtu.be/{yt-fulcro-1-id}?t=
+:yt-fulcro-2t: https://youtu.be/{yt-fulcro-2-id}?t=
+
+//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+== Usage ==
+
+=== Client ===
+
+1/ To start shadow process:
+
+[source, bash]
+----
+bb client:run
+----
+
+2/ Connect to Shadow nREPL (if you use Cursive, you can use attached 'client REPL' run config)
+
+3/ To switch to ClojureScript REPL call:
+
+[source, clojure]
+----
+(dev)
+----
+
+When the steps are completed two URLs should be available:
+
+* http://localhost:9630 - ShadowCLJ page
+* http://localhost:8000 - website
+
+//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+== Docs ==
+
+* Fulcro book v3: https://book.fulcrologic.com/
+
+//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+== Videos ==
+
+=== link:{yt-fulcro-1}[Fulcro – Part 1: Getting Started] ===
+
+video::{yt-fulcro-1-id}[youtube, start=, end=, width=1280, height=720]
+
+==== Content ====
+
+* initial files
+* intro to IntelliJ Idea
+* how to use Cursive & use REPL from it
+
+==== Notes ====
+
+Commit: "part-1: Add bare project". It includes:
+
+* bare minimal project, incl.
+ ** deps.edn, shadow-cljs.edn, index.html
+ ** simple client code (cljs) showing "Hello World"
+
+* amended compare to the video
+ ** replaced `def APP` with `defonce APP` (possible bug, {yt-fulcro-1t}4m13s[client in part 1], {yt-fulcro-2t}0m0s[client part 2])
+ ** added bb.edn
+ ** upgraded to the latest versions
+  *** fulcro: 3.5.34
+  *** shadow-cljs: 2.20.20
+  *** react & react-dom: 17.0.2
+  *** clojure 1.11.1, clojurescript 1.11.60
+  *** jvm: 11.0.17 (Corretto-11.0.17.8.1)
+  *** nvm: v18.13.0
+ ** fixed 1.11.1 warnings by using newer `com.taoensso/sente`
+ ** added `app.client/refresh` to use it for hot reloads
+
+//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+== Writing this doc ==
+
+I've been processing the all AsciiDoc files with command:
+[source, bash]
+----
+asciidoctor **/*.adoc; fswatch -o **/*.adoc | xargs -n1 -I{} asciidoctor **/*.adoc
+----
+
+Plus serving the HTML via IntelliJ IDEA's `docs/README.html` > Open In > Browser > Firefox.
+
+The link should be something like: http://localhost:63342/fulcro3-yt-tutorial/docs/README.html?&_ij_reload=RELOAD_ON_SAVE
