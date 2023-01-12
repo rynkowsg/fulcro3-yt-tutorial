@@ -3,9 +3,12 @@
 :root-dir: .
 
 :yt-fulcro-3-id: KJsFLmkdRig
+:yt-fulcro-4-id: vNKYl-5x8Ao
+
 :yt-fulcro-1: https://www.youtube.com/watch?v=wEjNWUMCX78
 :yt-fulcro-2: https://www.youtube.com/watch?v=HCVzG2BLRwk
 :yt-fulcro-3: https://www.youtube.com/watch?v={yt-fulcro-3-id}
+:yt-fulcro-4: https://www.youtube.com/watch?v={yt-fulcro-4-id}
 
 
 == link:{yt-fulcro-1}[Fulcro – Part 1: Getting Started]
@@ -140,3 +143,22 @@ video::KJsFLmkdRig[youtube, start=678, end=, width=1280, height=720]
 === Commit "part-3: Demo mutations with 'make older' btn"
 
 Adds one button 'make older' that applies mutation to the current user.
+
+
+== link:{yt-fulcro-4}[Fulcro – Part 4 : Components, DOM, and React]
+
+video::{yt-fulcro-4-id}[youtube, start=0, end=, width=1280, height=720]
+
+=== Notes
+
+==== styling ({yt-fulcro-4}?t=0[0:00]  - {yt-fulcro-4}?t=401[6:41])
+
+* to apply styles you can use either:
+ ** short version: `(div :.ui.form ...)`
+ ** long version: `(div {:className "ui form"} ...)`
+* `div` is at the same time both function and macro.
+  Depends on situation fulcro decides to use one or another.
+* because macros are evaluated in compile time, and
+  because of it, fulcro is able to get you exact same
+  code that JSX would generate for you
+* for best performence it is worth to drop the options mape, even if empty, eg. `(div {} ...)` instead of `(div ...)`
