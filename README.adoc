@@ -191,3 +191,21 @@ video::{yt-fulcro-4-id}[youtube, start=0, end=, width=1280, height=720]
  ** `:ident (fn [_ _] [:person/id (:person/id props)])` (equivalent of the first one)
 * _"when we get to a singleton component, where there's only going to one representation in the database, the id part of the ident is constant, and so we don't want it computed at all"_
  ** in such scenario we could use `:ident (fn [_ _] [:component/id ::person-list])`
+
+==== use react component ({yt-fulcro-4}?t=23m38s[23:38]  - {yt-fulcro-4}?t=29m44s[29:44])
+
+* shadow-cljs doesn't need to be restarted to see added libraries (with `npm install`)
+* shadow-cljs provides a way to import JS
+
+|===
+|JavaScript | ClojureScript
+| ES5 `const NumberFormat = require('react-number-format');`|`["react-number-format" :as NumberFormat]`
+| ES6 `import NumberFormat from 'react-number-format';`|`["react-number-format" :as NumberFormat]`
+| ES6 `import { NumericFormat } from 'react-number-format';`|`["react-number-format" :refer (NumericFormat)]`
+|===
+
+[INFO]
+====
+DOM inputs in HTML always take string inputs, and always return string outputs.
+This includes time, date. Always strings. Remember!
+====
