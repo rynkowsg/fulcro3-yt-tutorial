@@ -4,6 +4,7 @@
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom]
+   [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
    [com.fulcrologic.fulcro.react.version18 :refer [with-react18]]))
 
 (defsc Car [this {:car/keys [id model]}]
@@ -14,6 +15,10 @@
   (dom/div "Model: " model))
 
 (def ui-car (comp/factory Car {:keyfn :car/id}))
+
+(defmutation make-older [{:person/keys [id]}]
+  (action [{:keys [state]}]
+    (swap! state update-in [:person/id id :person/age] inc)))
 
 (defsc Person [this {:person/keys [id name age cars] :as props}]
   {:query         [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
@@ -27,6 +32,7 @@
   (dom/div
     (dom/div "Names: " name)
     (dom/div "Age: " age)
+    (dom/button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
     (dom/h3 "Cars:")
     (dom/ul
       (map ui-car cars))))
@@ -81,4 +87,10 @@
  (comp/get-ident Car {:car/id 1})
 
  ;; get initial state
- (comp/get-initial-state Sample))
+ (comp/get-initial-state Sample)
+
+ ;; mutations
+ (make-older {:person/id 1})
+ `(make-older {:person/id 1})
+ (comp/transact! APP [(make-older {:person/id 5})])
+ (comp/transact! APP [`(make-older {:person/id 5})]))
