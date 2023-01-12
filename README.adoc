@@ -2,8 +2,10 @@
 
 :root-dir: .
 
+:yt-fulcro-3-id: KJsFLmkdRig
 :yt-fulcro-1: https://www.youtube.com/watch?v=wEjNWUMCX78
 :yt-fulcro-2: https://www.youtube.com/watch?v=HCVzG2BLRwk
+:yt-fulcro-3: https://www.youtube.com/watch?v={yt-fulcro-3-id}
 
 
 == link:{yt-fulcro-1}[Fulcro – Part 1: Getting Started]
@@ -59,3 +61,62 @@ video::HCVzG2BLRwk[youtube, start=, end=, width=1280, height=720]
  ** age
  ** cars
 * Comments showing how to merge data to the database
+
+
+== link:{yt-fulcro-3}[Fulcro – Part 3: Initial State and Mutations]
+
+video::KJsFLmkdRig[youtube, start=0, end=678, width=1280, height=720]
+
+=== Content
+
+* how to get initial state
+
+=== Notes
+
+The initial state is provided on initial mount (on `(app/mount)`).
+Mount is looking at things that need to be there for the first frame to render reasonably.
+
+It is for purely client site setup like:
+- UI routing,
+- empty state values.
+
+There are two notations for providing initial state.
+
+Longer version:
+
+[source,clojure]
+----
+:initial-state (fn [{:keys [id name]}]
+                   {:person/id   id
+                    :person/name name
+                    :person/age  20
+                    :person/cars [(comp/get-initial-state Car {:id 40 :model "Leaf"})
+                                  (comp/get-initial-state Car {:id 41 :model "Escort"})
+                                  (comp/get-initial-state Car {:id 42 :model "Sienna"})]})
+----
+
+And shorter:
+
+[source,clojure]
+----
+:initial-state {:person/id   :param/id
+                :person/name :param/name
+                :person/age  20
+                :person/cars [{:id 40 :model "Leaf"}
+                              {:id 41 :model "Escort"}
+                              {:id 42 :model "Sienna"}]}
+----
+
+The shorter version is shorter and gets more error checking
+(if you misspell keyword it will point it out).
+
+[CAUTION]
+====
+The type of data used in examples usually reside on the backend.
+In the initial state we provide only purely clients data.
+====
+
+
+=== Commit "part-3: Add initial state"
+
+* added initial state for the app, so when reloaded is not empty
