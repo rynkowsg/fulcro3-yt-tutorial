@@ -7,6 +7,7 @@
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
    [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
+   [com.fulcrologic.fulcro.react.version18 :refer [with-react18]]
    [com.fulcrologic.fulcro.rendering.keyframe-render :as keyframe]))
 
 (def ui-number-format (interop/react-factory NumericFormat))
@@ -87,7 +88,7 @@
     (h3 {} "Application")
     (ui-person-list list)))
 
-(defonce APP (app/fulcro-app {:optimized-render! keyframe/render!}))
+(defonce APP (with-react18 (app/fulcro-app {:optimized-render! keyframe/render!})))
 
 (defn ^:export init []
   (app/mount! APP Root "app"))

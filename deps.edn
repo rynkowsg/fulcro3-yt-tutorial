@@ -1,6 +1,6 @@
 {:paths   ["src" "resources"]
  :deps    {org.clojure/clojure    {:mvn/version "1.11.1"}
-           com.fulcrologic/fulcro {:mvn/version "3.5.34" ;; the latest (3.6.0-RC3) renders everything on every change
+           com.fulcrologic/fulcro {:mvn/version "3.6.0-RC4-SNAPSHOT"
                                    :exclusions  [com.taoensso/encore]} ;; to fix warnings about abs in Clojure 11
            com.taoensso/encore    {:mvn/version "3.45.0"}}
 
