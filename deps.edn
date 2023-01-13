@@ -1,9 +1,7 @@
 {:paths   ["src" "resources"]
  :deps    {org.clojure/clojure    {:mvn/version "1.11.1"}
-           com.fulcrologic/fulcro {:mvn/version "3.6.0-RC4-SNAPSHOT"
-                                   :exclusions  [com.taoensso/encore]} ;; to fix warnings about abs in Clojure 11
-           com.taoensso/encore    {:mvn/version "3.45.0"}}
-
+           com.fulcrologic/fulcro {:git/url    "https://github.com/fulcrologic/fulcro"
+                                   :sha        "63f32e488ae02a94e6172cfddb7e2d553897cca6"}}
  :aliases {:dev
            {:extra-paths ["dev"]
             :extra-deps  {binaryage/devtools           {:mvn/version "1.0.6"}
