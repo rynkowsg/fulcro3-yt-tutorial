@@ -1,7 +1,7 @@
 {:paths   ["src" "resources"]
  :deps    {org.clojure/clojure    {:mvn/version "1.11.1"}
            com.fulcrologic/fulcro {:git/url    "https://github.com/fulcrologic/fulcro"
-                                   :sha        "aabd3ca9e7b25262aea4814a9c6e6a0f53746f7c"}}
+                                   :sha        "2b96c84dff84b3e925efd162c7f989d8851a22e4"}}
  :aliases {:dev
            {:extra-paths ["dev"]
             :extra-deps  {binaryage/devtools           {:mvn/version "1.0.6"}
