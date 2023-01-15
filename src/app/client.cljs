@@ -3,7 +3,7 @@
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
-   [com.fulcrologic.fulcro.dom :as dom]
+   [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
    [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]))
 
 (defsc Car [this {:car/keys [id model]}]
@@ -11,7 +11,7 @@
    :ident         :car/id
    :initial-state {:car/id    :param/id
                    :car/model :param/model}}
-  (dom/div "Model: " model))
+  (div {} "Model: " model))
 
 (def ui-car (comp/factory Car {:keyfn :car/id}))
 
@@ -28,12 +28,17 @@
                    :person/cars [{:id 40 :model "Leaf"}
                                  {:id 41 :model "Escort"}
                                  {:id 42 :model "Sienna"}]}}
-  (dom/div
-    (dom/div "Names: " name)
-    (dom/div "Age: " age)
-    (dom/button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
-    (dom/h3 "Cars:")
-    (dom/ul
+  (div :.ui.segment {}
+    (div :.ui.form {}
+      (div :.field {}
+        (label {} "Name: ")
+        name)
+      (div :.field {}
+        (label {} "Age: ")
+        age))
+    (button {:onClick #(comp/transact! this [(make-older {:person/id id})])} "Make older")
+    (h3 {} "Cars:")
+    (ul {}
       (map ui-car cars))))
 
 (def ui-person (comp/factory Person {:keyfn :person/id}))
