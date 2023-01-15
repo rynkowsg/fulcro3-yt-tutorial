@@ -6,26 +6,35 @@
    [com.fulcrologic.fulcro.dom :as dom]))
 
 (defsc Car [this {:car/keys [id model]}]
-  {:query [:car/id :car/model]
-   :ident :car/id}
+  {:query         [:car/id :car/model]
+   :ident         :car/id
+   :initial-state {:car/id    :param/id
+                   :car/model :param/model}}
   (dom/div "Model: " model))
 
 (def ui-car (comp/factory Car {:keyfn :car/id}))
 
 (defsc Person [this {:person/keys [id name age cars] :as props}]
-  {:query [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
-   :ident :person/id}
+  {:query         [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
+   :ident         :person/id
+   :initial-state {:person/id   :param/id
+                   :person/name :param/name
+                   :person/age  20
+                   :person/cars [{:id 40 :model "Leaf"}
+                                 {:id 41 :model "Escort"}
+                                 {:id 42 :model "Sienna"}]}}
   (dom/div
-   (dom/div "Names: " name)
-   (dom/div "Age: " age)
-   (dom/h3 "Cars:")
-   (dom/ul
-    (map ui-car cars))))
+    (dom/div "Names: " name)
+    (dom/div "Age: " age)
+    (dom/h3 "Cars:")
+    (dom/ul
+      (map ui-car cars))))
 
 (def ui-person (comp/factory Person {:keyfn :person/id}))
 
 (defsc Sample [this {:root/keys [person] :as props}]
-  {:query [{:root/person (comp/get-query Person)}]}
+  {:query         [{:root/person (comp/get-query Person)}]
+   :initial-state {:root/person {:id 1 :name "Bob"}}}
   (ui-person person))
 
 (defonce APP (app/fulcro-app {}))
@@ -73,4 +82,7 @@
  (swap! (::app/state-atom APP) update-in [:person/id 5 :person/age] inc)
 
  ;; get ident
- (comp/get-ident Car {:car/id 1}))
+ (comp/get-ident Car {:car/id 1})
+
+ ;; get initial state
+ (comp/get-initial-state Sample))

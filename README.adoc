@@ -6,12 +6,15 @@
 
 :yt-fulcro-1-id: wEjNWUMCX78
 :yt-fulcro-2-id: HCVzG2BLRwk
+:yt-fulcro-3-id: KJsFLmkdRig
 
 :yt-fulcro-1: https://www.youtube.com/watch?v={yt-fulcro-1-id}
 :yt-fulcro-2: https://www.youtube.com/watch?v={yt-fulcro-2-id}
+:yt-fulcro-3: https://www.youtube.com/watch?v={yt-fulcro-3-id}
 
 :yt-fulcro-1t: https://youtu.be/{yt-fulcro-1-id}?t=
 :yt-fulcro-2t: https://youtu.be/{yt-fulcro-2-id}?t=
+:yt-fulcro-3t: https://youtu.be/{yt-fulcro-3-id}?t=
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -109,6 +112,65 @@ video::{yt-fulcro-2-id}[youtube, start=, end=, width=1280, height=720]
 *** age
 *** cars
 ** Comments showing how to merge data to the database
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+=== link:{yt-fulcro-3}[Fulcro – Part 3: Initial State and Mutations] ===
+
+video::KJsFLmkdRig[youtube, start=0, end=, width=1280, height=720]
+
+==== Notes ====
+
+===== Initial state _({yt-fulcro-3t}00m00s[00:00])_ =====
+
+The initial state is provided on initial mount (on `(app/mount)`).
+Mount is looking at things that need to be there for the first frame to render reasonably.
+
+It is for purely client site setup like:
+
+* UI routing,
+* empty state values.
+
+There are two notations for providing initial state.
+
+Longer version:
+
+[source,clojure]
+----
+:initial-state (fn [{:keys [id name]}]
+                   {:person/id   id
+                    :person/name name
+                    :person/age  20
+                    :person/cars [(comp/get-initial-state Car {:id 40 :model "Leaf"})
+                                  (comp/get-initial-state Car {:id 41 :model "Escort"})
+                                  (comp/get-initial-state Car {:id 42 :model "Sienna"})]})
+----
+
+And shorter:
+
+[source,clojure]
+----
+:initial-state {:person/id   :param/id
+                :person/name :param/name
+                :person/age  20
+                :person/cars [{:id 40 :model "Leaf"}
+                              {:id 41 :model "Escort"}
+                              {:id 42 :model "Sienna"}]}
+----
+
+The shorter version is shorter and gets more error checking
+(if you misspell keyword it will point it out).
+
+[CAUTION]
+====
+The type of data used in examples usually reside on the backend.
+In the initial state we provide only purely clients data.
+====
+
+==== Commits ====
+
+* *part-3: Add initial state*
+** adds initial state for the app, so when reloaded is not empty
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
