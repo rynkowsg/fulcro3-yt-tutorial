@@ -291,9 +291,54 @@ video::{yt-fulcro-5-id}[youtube, start=0, end=, width=1280, height=720]
 `:shouldComponentUpdate (fn [this props state] true)`
 * by default react computes all VDOM components and at the later stage decides via diffing what actually should go to the DOM
 
+===== REPL fulcro components =====
+
+* the optimisation are based on info like:
+** what the component needs (`:query`)
+** where in the database its data can be found (`:ident`)
+
+* when the component like `Person` mounts, it can be indexed (7:20)
+* to look at these indexes:
++
+[source,clojure]
+----
+;; show all classes that query a prop :person/age
+(comp/prop->classes APP :person/age) ; => #{:app.client/Person}
+
+;; get class for given class key
+(comp/registry-key->class :app.client/Person) ; => app.client/Person
+
+;; show all components rendering Person
+(comp/class->all APP Person) ; => #{#object[Component [object Object]] #object[Component [object Object]]}
+(comp/class->all APP (comp/registry-key->class :app.client/Person)) ;; same as above
+
+;; having component we can check its ident
+(comp/get-ident component) ; => [:person/id 1]
+
+;; get denormalized data having component's id
+(let [state (app/current-state APP)
+      component-query (comp/get-query Person)
+      component-ident [:person/id 1]
+      starting-entity (get-in state component-ident)]
+   (fdn/db->tree component-query starting-entity state))
+; => #:person{:id 1,
+;             :name "Bob",
+;             :age 20,
+;             :cars [#:car{:id 40, :model "Leaf"} #:car{:id 41, :model "Escort"} #:car{:id 42, :model "Sienna"}]}
+----
++
+* `prop->classes` index trackes components by keyword not by class, because classes can change on hot code reload
+* _"if I know `:person/age` changed, I can derive an upper bound for the things that need to be refreshed I need refresh all of the things that have class `Person` in this particular namespace."_
+* and with `class->all` it is passible to find all the instances (components)
+* with `fdn/db->tree` we can get denormalized data
+
+* the ident based optimisation gets two states, the one before and the one after, and compares for every component whether the data it needs has changed or not
+
 ==== Commits ====
 
 * *part-5: Log on rendering (but works incorrectly)*
+
+* *part-5: Demo of funs to discover components)*
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 

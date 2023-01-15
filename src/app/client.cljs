@@ -1,6 +1,7 @@
 (ns app.client
   (:require
    ["react-number-format" :refer (NumericFormat)]
+   [com.fulcrologic.fulcro.algorithms.denormalize :as fdn]
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
    [com.fulcrologic.fulcro.application :as app]
@@ -150,4 +151,30 @@
  (make-older {:person/id 1})
  `(make-older {:person/id 1})
  (comp/transact! APP [(make-older {:person/id 5})])
- (comp/transact! APP [`(make-older {:person/id 5})]))
+ (comp/transact! APP [`(make-older {:person/id 5})])
+
+ ;; indexes
+ ;; take all components rendering Person
+ (comp/class->all APP Person)
+ ;; take random component rendering Person
+ (comp/class->any APP Person)
+
+ ;; show all classes that query a prop
+ (comp/prop->classes APP :person/age)
+
+ ;; demo
+ ;; - get all components querying the prop
+ (defn get-component-that-query-for-a-prop [prop]
+   (let [f (fn [p])]
+     (->> (comp/prop->classes APP prop)
+          (reduce (fn [acc cls-key] (concat acc (comp/class->all APP (comp/registry-key->class cls-key)))) []))))
+ ;; - find all idents quering :person/age
+ (map
+  comp/get-ident
+  (get-component-that-query-for-a-prop :person/age))
+ ;; - having ident, get denormalized data of the ident
+ (let [state           (app/current-state APP)
+       component-query (comp/get-query Person)
+       component-ident [:person/id 1]
+       starting-entity (get-in state component-ident)]
+   (fdn/db->tree component-query starting-entity state)))
