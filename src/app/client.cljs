@@ -8,7 +8,7 @@
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
    [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
-   [com.fulcrologic.fulcro.rendering.keyframe-render :as keyframe]))
+   [com.fulcrologic.fulcro.rendering.ident-optimized-render :as ident-optimized]))
 
 (def ui-number-format (interop/react-factory NumericFormat))
 
@@ -73,9 +73,13 @@
    :initial-state {:person-list/people [{:id 1 :name "Bob"}
                                         {:id 2 :name "Sally"}]}}
   (js/console.log "Render person list")
-  (div {}
-    (h3 {} "People")
-    (map ui-person people)))
+  (let [cnt (reduce #(if (> (:person/age %2) 30) (inc %1) %1) 0 people)]
+    (div :.ui.segment {}
+      (h3 :.ui.header "People")
+      (div {} "Over 30: " cnt)
+      (div {}
+        (h3 {} "People")
+        (map ui-person people)))))
 
 
 (def ui-person-list (comp/factory PersonList))
@@ -88,7 +92,7 @@
     (h3 {} "Application")
     (ui-person-list list)))
 
-(defonce APP (app/fulcro-app {:optimized-render! keyframe/render!}))
+(defonce APP (app/fulcro-app {:optimized-render! ident-optimized/render!}))
 
 (defn ^:export init []
   (app/mount! APP Root "app")

@@ -334,11 +334,21 @@ video::{yt-fulcro-5-id}[youtube, start=0, end=, width=1280, height=720]
 
 * the ident based optimisation gets two states, the one before and the one after, and compares for every component whether the data it needs has changed or not
 
+===== ident-optimized-render pros/cons =====
+
+* ident-optimised-render relays on its dependants, but it doesn't check its internal data.
+** in the example of ;counting people over 30' Tony shows that if we compute some data within a component based on data from components inside
+*** the ident-optimised-render will not detect the change and will not re-render the `PersonList`
+*** ident-optimised-render will re-render only the `Person` components that changed, it will not re-render `PersonList`
+* so the easy choice is to use keyframe-render (actually in the latest version of the Fulcro this one is the default one)
+
 ==== Commits ====
 
 * *part-5: Log on rendering (but works incorrectly)*
 
 * *part-5: Demo of funs to discover components)*
+
+* *part-5: Demo ident-optimized-render pros/cons*
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
