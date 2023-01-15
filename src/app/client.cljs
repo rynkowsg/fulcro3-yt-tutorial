@@ -57,7 +57,7 @@
         (div :.field {}
           (label {:onClick onClick} "Age: ")
           age))
-      (button {:onClick #(do (comp/transact! this [(make-older {:person/id id})])
+      (button {:onClick #(do (comp/transact! this [(make-older {:person/id id})] {:refresh [:person-list/people]})
                              (js/console.log "Made" name "older from inline function"))}
         "Make older")
       (h3 {} "Cars:")

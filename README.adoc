@@ -342,6 +342,8 @@ video::{yt-fulcro-5-id}[youtube, start=0, end=, width=1280, height=720]
 *** ident-optimised-render will re-render only the `Person` components that changed, it will not re-render `PersonList`
 * so the easy choice is to use keyframe-render (actually in the latest version of the Fulcro this one is the default one)
 
+* the other choice is to provide in a mutation a hint what should be refreshed via `:refresh` (commit `part-5: ident-optimized-render with :refresh`)
+
 ==== Commits ====
 
 * *part-5: Log on rendering (but works incorrectly)*
@@ -349,6 +351,8 @@ video::{yt-fulcro-5-id}[youtube, start=0, end=, width=1280, height=720]
 * *part-5: Demo of funs to discover components)*
 
 * *part-5: Demo ident-optimized-render pros/cons*
+
+* *part-5: ident-optimized-render with :refresh*
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
