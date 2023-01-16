@@ -81,6 +81,35 @@ Commit: "part-1: Add bare project". It includes:
  ** fixed 1.11.1 warnings by using newer `com.taoensso/sente`
  ** added `app.client/refresh` to use it for hot reloads
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+=== link:{yt-fulcro-2}[Fulcro – Part 2: Normalization] ===
+
+video::{yt-fulcro-2-id}[youtube, start=, end=, width=1280, height=720]
+
+==== Content ====
+
+* simple layout to list person, their age and they cars
+* more on components (idents, query)
+* `merge-component!`
+* normalized database
+
+==== Notes ====
+
+* `merge-component!` works by taking an ident from the given data and injecting that into APP
+* you can't merge root component with `merge-component!` ({yt-fulcro-2t}16m57s[16:57])
+* `merge-component!` support replacing particular top thing by added edge (`:replace`)
+* `merge-component!` with `:append` adds an edge to given position
+
+==== Commits ====
+
+* *part-2: Demo normalization on simple layout*
+** Simple layout includes showing person details:
+*** name
+*** age
+*** cars
+** Comments showing how to merge data to the database
+
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 == Writing this doc ==
