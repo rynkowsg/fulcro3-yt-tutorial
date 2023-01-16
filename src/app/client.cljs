@@ -1,10 +1,14 @@
 (ns app.client
   (:require
+   ["react-number-format" :refer (NumericFormat)]
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
+   [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
    [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]))
+
+(def ui-number-format (interop/react-factory NumericFormat))
 
 (defsc Car [this {:car/keys [id model]}]
   {:query         [:car/id :car/model]
@@ -42,6 +46,11 @@
         (div :.field {}
           (label {} "Name: ")
           name)
+        (div :.field {}
+          (label {} "Amount:")
+          (ui-number-format {:value             "100000200.00" ;; values in HTML components are always strings
+                             :thousandSeparator true
+                             :prefix            "$"}))
         (div :.field {}
           (label {:onClick onClick} "Age: ")
           age))
