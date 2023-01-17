@@ -8,4 +8,5 @@
   client:run       {:depends [npm-inst]
                     :task    (shell "npx shadow-cljs watch main")}
   client:run-clean {:depends [clean npm-inst]
-                    :task    (shell "npx shadow-cljs watch main")}}}
+                    :task    (shell "npx shadow-cljs watch main")}
+  server:repl      {:task (shell "clj -M:dev:nrepl")}}}

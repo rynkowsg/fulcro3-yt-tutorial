@@ -9,18 +9,21 @@
 :yt-fulcro-3-id: KJsFLmkdRig
 :yt-fulcro-4-id: vNKYl-5x8Ao
 :yt-fulcro-5-id: JBy_htHxygo
+:yt-fulcro-6-id: F7QzFpo8pA0
 
 :yt-fulcro-1: https://www.youtube.com/watch?v={yt-fulcro-1-id}
 :yt-fulcro-2: https://www.youtube.com/watch?v={yt-fulcro-2-id}
 :yt-fulcro-3: https://www.youtube.com/watch?v={yt-fulcro-3-id}
 :yt-fulcro-4: https://www.youtube.com/watch?v={yt-fulcro-4-id}
 :yt-fulcro-5: https://www.youtube.com/watch?v={yt-fulcro-5-id}
+:yt-fulcro-6: https://www.youtube.com/watch?v={yt-fulcro-6-id}
 
 :yt-fulcro-1t: https://youtu.be/{yt-fulcro-1-id}?t=
 :yt-fulcro-2t: https://youtu.be/{yt-fulcro-2-id}?t=
 :yt-fulcro-3t: https://youtu.be/{yt-fulcro-3-id}?t=
 :yt-fulcro-4t: https://youtu.be/{yt-fulcro-4-id}?t=
 :yt-fulcro-5t: https://youtu.be/{yt-fulcro-5-id}?t=
+:yt-fulcro-6t: https://youtu.be/{yt-fulcro-6-id}?t=
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -49,11 +52,42 @@ When the steps are completed two URLs should be available:
 * http://localhost:9630 - ShadowCLJ page
 * http://localhost:8000 - website
 
+=== Server ===
+
+1/ Run nREPL process
+
+[source, bash]
+----
+bb server:repl
+----
+
+2/ Connect to server nREPL (if you use Cursive, you can use attached 'server REPL (remote)' run config)
+
+3/ Setup repl on start
+
+[source, clojure]
+----
+(dev)
+----
+
+4/ Start server
+
+[source, clojure]
+----
+(start)
+----
+
+When the steps are completed the below URL should be available:
+
+* http://localhost:3000 - website & api
+
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 == Docs ==
 
 * Fulcro book v3: https://book.fulcrologic.com/
+* Pathom docs v3: https://blog.wsscode.com/pathom/
+* Pathom docs v2: https://blog.wsscode.com/pathom/v2/pathom/2.2.0/introduction.html[https://blog.wsscode.com/pathom/v2]
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -353,6 +387,106 @@ video::{yt-fulcro-5-id}[youtube, start=0, end=, width=1280, height=720]
 * *part-5: Demo ident-optimized-render pros/cons*
 
 * *part-5: ident-optimized-render with :refresh*
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+=== link:{yt-fulcro-6}[Fulcro – Part 6 : Full Stack Part One] ===
+
+video::{yt-fulcro-6-id}[youtube, start=0, end=, width=1280, height=720]
+
+==== Content ====
+
+* {yt-fulcro-6t}00m09s[00:09] - setup deps.edn
+* {yt-fulcro-6t}02m25s[02:25] - setup pub resources (index.html)
+* {yt-fulcro-6t}02m58s[02:58] - ring middleware & phatom parser
+* {yt-fulcro-6t}05m00s[05:00] - some info on transit
+* {yt-fulcro-6t}05m31s[05:31] - Cursive Run config for server
+* {yt-fulcro-6t}06m13s[06:13] - discussing server's start/stop/restart
+* {yt-fulcro-6t}06m20s[06:20] - Tony's keymap and Cursive REPL command restarting server
+* {yt-fulcro-6t}08m41s[08:41] - discussing server's start/stop/restart - restarting/releasing resources
+ ** these days Tony tends to use mount ({yt-fulcro-6t}09m30s[09:30])
+* {yt-fulcro-6t}10m10s[10:10] - discussing server's start/stop/restart - discussing ns refresh (tools.namespace)
+* {yt-fulcro-6t}12m40s[12:40] - connecting client
+* {yt-fulcro-6t}14m20s[14:20] - more notes on transit
+ ** transit knows how to encode data, how to encode bigdecimals
+ ** _"if you use monetary units, let the big decimal come across"_
+ ** how to handle bigdecimals in JavaScript and ClojureScript, how to make BigDecimals truly isomorphic
+ ** _"don't make your types different among these two sides"_
+* {yt-fulcro-6t}15m59s[15:59] - use tick for dates/times
+* {yt-fulcro-6t}16m40s[16:40] - back to code, some changes to the code
+* {yt-fulcro-6t}16m40s[18:18] - discussing model
+ ** you can keep model in one space
+ ** large namespace compiles long (that's why fulcro is split)
+ ** two options we have:
+  *** one cljc for all (spec, cljs, clj)
+  *** one cljc for spec, one cljs and ona clj
+  *** the best practice would be the second one ({yt-fulcro-6t}22m54s[22:54])
+* {yt-fulcro-6t}22m56s[22:56] - refactor the model to follow best practice
+* {yt-fulcro-6t}22m56s[22:56] - refactor the model (`Person`, `Car`) to follow best practice
+* {yt-fulcro-6t}29m08s[29:08] - discussing code with Phatom resolvers
+* {yt-fulcro-6t}31m05s[31:05] - showing Fulcro Inspect's Query tab
+ ** {yt-fulcro-6t}41m05s[41:05] - `:all-people` is example of _global resolver_ (equivelent of _root resolver_ in GraphQL)
+  *** _global resolvers_ can nest themselves because they require no context ({yt-fulcro-6t}41m20s[41:20])
+  *** because of Pathom is schema-less, it is fine to put global resolvers anyware - it is one advantages of GraphQL
++
+[source,clojure]
+----
+[{:all-people [:app.specs.person/name
+               :app.specs.person/age
+               {:all-people [:app.specs.person/id]}]}]
+; => {:all-people [{:app.specs.person/name "Bob",
+;                   :app.specs.person/age 22,}]}]
+;                   :all-people [#:app.specs.person{:id 1} #:app.specs.person{:id 2}]}]}]
+;                  {:app.specs.person/name "Sally",}}]}]
+;                   :app.specs.person/age 26,}]}]
+;                   :all-people [#:app.specs.person{:id 1} #:app.specs.person{:id 2}]}]}]
+----
++
+*** on of nice examples of it is using `:server/time` global resolver ({yt-fulcro-6t}43m32s[43:32])
++
+[source,clojure]
+----
+[{:all-people [:app.specs.person/name
+               :server/time]}]
+; => {:all-people
+;     [{:server/time #inst "2023-01-19T21:33:54.233-00:00",
+;       :app.specs.person/name "Bob"}
+;      {:server/time #inst "2023-01-19T21:33:54.233-00:00",
+;       :app.specs.person/name "Sally"}]}
+----
++
+*** _"global resolvers are particularly handy since fulcro gives you normalization being able
+     to grab things at any place in your query tree, it's quite handy because it doesn't matter
+     if they are nested in the query because you are normalizing them at the end of the day"_
+
+* {yt-fulcro-6t}44m02s[44:02] - populating the client with data from backend
+** {yt-fulcro-6t}44m17s[44:17] usage of `:client-did-mount`
+** {yt-fulcro-6t}44m34s[44:34] explanation of `df/load`
+** {yt-fulcro-6t}44m34s[44:34] explanation of `df/load` & its `:target`
+
+* {yt-fulcro-6t}48m10s[48:10] - mutation
+
+** to make mutation fullstack you need to create a section in the client's mutation called `remote` and return there `true` ({yt-fulcro-6t}51m14s[51:14])
+*** the word 'remote' actually is the default convention but you can change it to whatever you want if you also change the `:remote` keyword in the `:remotes` map ({yt-fulcro-6t}51m17s[51:17])
+
+** {yt-fulcro-6t}50m05s[50:05] - be very careful what is returned from remote mutation
+*** e.g. returning `(java.util.BitSet.)` breaks mutation ({yt-fulcro-6t}?t=53m24s[53:24])
+*** keyword, empty map, whatever can be transcoded by transit is fine
+*** you can also return something like an id `{::person/id id}` so Pathom could do more magic (some advanced tricks) ({yt-fulcro-6t}54m20s[54:20])
+
+
+==== Notes ====
+
+* In {yt-fulcro-6}[Part 6], Tony uses `p/error-handler-plugin` and he still gets an exception thrown locally.
+  It no longer works that way in the latests stable Phatom 2 (v2.4.0). In the tutorial Tony used v2.2.24.
+  To make the exception visible, I added a function printing the stacktrace. Alternatively, the plugin could be removed.
+
+
+==== Commits ====
+
+* *part-6: Make the app fullstack*
+** uses newer version of fulcro 2.4.0
+** to make exceptions visible I added `p/env-plugin` with function under `::p/process-error` key
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 

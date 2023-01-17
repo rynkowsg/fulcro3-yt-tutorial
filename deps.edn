@@ -6,7 +6,11 @@
                                    ; exclude sente and add the newer version
                                    :exclusions  [com.taoensso/sente]}
            com.taoensso/sente     {:mvn/version "1.17.0"}
-           org.clojure/clojure    {:mvn/version "1.11.1"}}
+           com.taoensso/timbre    {:mvn/version "6.0.4"}
+           com.wsscode/pathom     {:mvn/version "2.4.0"}
+           http-kit/http-kit      {:mvn/version "2.6.0"}
+           org.clojure/clojure    {:mvn/version "1.11.1"}
+           ring/ring-core         {:mvn/version "1.9.6"}}
 
  :aliases {:dev
            {:extra-paths ["dev"]
@@ -21,4 +25,8 @@
                                                         ;; load/refresh of `utils.deps` ns causes pop up of this error
                                                         ;; it is because that ns uses `clojure.tools.deps.alpha.repl` (org.clojure/tools.deps.alpha)
                                                         :mvn/version "2.0.6"}
-                          thheller/shadow-cljs         {:mvn/version "2.20.20"}}}}}
+                          thheller/shadow-cljs         {:mvn/version "2.20.20"}}}
+
+           :nrepl
+           {:extra-deps {nrepl/nrepl {:mvn/version "1.0.0"}}
+            :main-opts  ["-m" "nrepl.cmdline" "--interactive"]}}}

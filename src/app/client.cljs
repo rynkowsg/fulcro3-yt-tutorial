@@ -1,41 +1,27 @@
 (ns app.client
   (:require
    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
+   [app.model.person :refer [make-older]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+   [com.fulcrologic.fulcro.data-fetch :as df]
+   [app.specs.person :as person]
+   [app.specs.car :as car]
    [com.fulcrologic.fulcro.dom :as dom :refer [button div h3 label ul]]
-   [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]))
+   [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
+   [com.fulcrologic.fulcro.networking.http-remote :as http]))
 
-(defsc Car [this {:car/keys [id model]}]
-  {:query         [:car/id :car/model]
-   :ident         :car/id
-   :initial-state {:car/id    :param/id
-                   :car/model :param/model}}
+(defsc Car [this {::car/keys [id model]}]
+  {:query [::car/id ::car/model]
+   :ident ::car/id}
   (js/console.log "Render car" id)
   (div {} "Model: " model))
 
-(def ui-car (comp/factory Car {:keyfn :car/id}))
+(def ui-car (comp/factory Car {:keyfn ::car/id}))
 
-(defmutation make-older [{:person/keys [id]}]
-  (action [{:keys [state]}]
-    (swap! state update-in [:person/id id :person/age] inc)))
-
-(defsc Person [this {:person/keys [id name age cars] :as props}]
-  {:query             [:person/id :person/name :person/age {:person/cars (comp/get-query Car)}]
-   :ident             :person/id
-   :initial-state     {:person/id   :param/id
-                       :person/name :param/name
-                       :person/age  20
-                       :person/cars [{:id 40 :model "Leaf"}
-                                     {:id 41 :model "Escort"}
-                                     {:id 42 :model "Sienna"}]}
-   :componentDidMount (fn [this] (let [p (comp/props this)]
-                                   (js/console.log "Mounted" p)))
-   :initLocalState    (fn [this {:person/keys [id name age cars] :as props}]
-                        {:anything :can-be-added-here
-                         :onClick  (fn [evt]
-                                     (comp/transact! this [(make-older {:person/id id})])
-                                     (js/console.log "Made" name "older from cached function"))})}
+(defsc Person [this {::person/keys [id name age cars] :as props}]
+  {:query [::person/id ::person/name ::person/age {::person/cars (comp/get-query Car)}]
+   :ident ::person/id}
   (js/console.log "Render person" id)
   (let [onClick (comp/get-state this :onClick)]
     (div :.ui.segment {}
@@ -44,25 +30,24 @@
           (label {} "Name: ")
           name)
         (div :.field {}
-          (label {:onClick onClick} "Age: ")
+          (label {} "Age: ")
           age))
-      (button {:onClick #(do (comp/transact! this [(make-older {:person/id id})] {:refresh [:person-list/people]})
+      (button {:onClick #(do (comp/transact! this [(make-older {::person/id id})] {:refresh [:person-list/people]})
                              (js/console.log "Made" name "older from inline function"))}
         "Make older")
       (h3 {} "Cars:")
       (ul {}
         (map ui-car cars)))))
 
-(def ui-person (comp/factory Person {:keyfn :person/id}))
+(def ui-person (comp/factory Person {:keyfn ::person/id}))
 
 ;; We have only one PersonList in the app, therefore we don't need an id for the list.
 (defsc PersonList [this {:person-list/keys [people] :as props}]
   {:query         [{:person-list/people (comp/get-query Person)}]
    :ident         (fn [_ _] [:component/id ::person-list])
-   :initial-state {:person-list/people [{:id 1 :name "Bob"}
-                                        {:id 2 :name "Sally"}]}}
+   :initial-state {:person-list/people []}}
   (js/console.log "Render person list")
-  (let [cnt (reduce #(if (> (:person/age %2) 30) (inc %1) %1) 0 people)]
+  (let [cnt (reduce #(if (> (::person/age %2) 30) (inc %1) %1) 0 people)]
     (div :.ui.segment {}
       (h3 :.ui.header "People")
       (div {} "Over 30: " cnt)
@@ -80,7 +65,10 @@
     (h3 {} "Application")
     (ui-person-list list)))
 
-(defonce APP (app/fulcro-app {:optimized-render! ident-optimized/render!}))
+(defonce APP (app/fulcro-app {:remotes          {:remote (http/fulcro-http-remote {:url "/api"})}
+                              :client-did-mount (fn [app]
+                                                  (df/load! app :all-people Person ;; equivalent of {:all-people (comp/get-query Person}
+                                                            {:target [:component/id ::person-list :person-list/people]}))}))
 
 (defn ^:export init []
   (app/mount! APP Root "app")
@@ -89,5 +77,3 @@
 (defn ^:export refresh []
   (app/mount! APP Root "app")
   (js/console.log "Hot reload"))
-
-(comment)
