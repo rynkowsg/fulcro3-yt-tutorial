@@ -48,8 +48,8 @@
   (li :.item
       (a {:href    "#"
           :onClick (fn []
-                     (comp/transact! this [(select-person {:query-class PersonDetail
-                                                           :person/id id})]))}
+                     (comp/transact! this [{(select-person {:person/id id})
+                                            (comp/get-query PersonDetail)}]))}
          name)))
 
 (def ui-person-list-item (comp/factory PersonListItem {:keyfn :person/id}))
