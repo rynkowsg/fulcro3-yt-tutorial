@@ -49,8 +49,8 @@
 
 (comment
  ;; query Pathom index:
- (parser {} [{:all-people [:app.specs.person/name
-                           :app.specs.person/age
-                           {:all-people [:app.specs.person/id]}]}])
+ (parser {} [{:all-people [:person/name
+                           :person/age
+                           {:all-people [:person/id]}]}])
 
  (parser {} [:server/time]))

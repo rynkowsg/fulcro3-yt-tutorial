@@ -10,6 +10,7 @@
 :yt-fulcro-4-id: vNKYl-5x8Ao
 :yt-fulcro-5-id: JBy_htHxygo
 :yt-fulcro-6-id: F7QzFpo8pA0
+:yt-fulcro-7-id: wuOnP5yufxU
 
 :yt-fulcro-1: https://www.youtube.com/watch?v={yt-fulcro-1-id}
 :yt-fulcro-2: https://www.youtube.com/watch?v={yt-fulcro-2-id}
@@ -17,6 +18,7 @@
 :yt-fulcro-4: https://www.youtube.com/watch?v={yt-fulcro-4-id}
 :yt-fulcro-5: https://www.youtube.com/watch?v={yt-fulcro-5-id}
 :yt-fulcro-6: https://www.youtube.com/watch?v={yt-fulcro-6-id}
+:yt-fulcro-7: https://www.youtube.com/watch?v={yt-fulcro-7-id}
 
 :yt-fulcro-1t: https://youtu.be/{yt-fulcro-1-id}?t=
 :yt-fulcro-2t: https://youtu.be/{yt-fulcro-2-id}?t=
@@ -24,6 +26,7 @@
 :yt-fulcro-4t: https://youtu.be/{yt-fulcro-4-id}?t=
 :yt-fulcro-5t: https://youtu.be/{yt-fulcro-5-id}?t=
 :yt-fulcro-6t: https://youtu.be/{yt-fulcro-6-id}?t=
+:yt-fulcro-7t: https://youtu.be/{yt-fulcro-7-id}?t=
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -271,7 +274,7 @@ it is useful for performance as it.
 ** `:ident [:PEOPLE :person/id]` - will use `:person/id` for ident but in the db it will use `:PEOPLE` as top name
 ** `:ident (fn [_ _] [:person/id (:person/id props)])` (equivalent of the first one)
 * _"when we get to a singleton component, where there's only going to one representation in the database, the id part of the ident is constant, and so we don't want it computed at all"_
-** in such scenario we could use `:ident (fn [_ _] [:component/id ::person-list])`
+** in such scenario we could use `:ident (fn [_ _] [:component/id :person-list])`
 
 ===== use react component _({yt-fulcro-4t}23m38s[23:38])_ =====
 
@@ -431,28 +434,28 @@ video::{yt-fulcro-6-id}[youtube, start=0, end=, width=1280, height=720]
 +
 [source,clojure]
 ----
-[{:all-people [:app.specs.person/name
-               :app.specs.person/age
-               {:all-people [:app.specs.person/id]}]}]
-; => {:all-people [{:app.specs.person/name "Bob",
-;                   :app.specs.person/age 22,}]}]
-;                   :all-people [#:app.specs.person{:id 1} #:app.specs.person{:id 2}]}]}]
-;                  {:app.specs.person/name "Sally",}}]}]
-;                   :app.specs.person/age 26,}]}]
-;                   :all-people [#:app.specs.person{:id 1} #:app.specs.person{:id 2}]}]}]
+[{:all-people [:person/name
+               :person/age
+               {:all-people [:person/id]}]}]
+; => {:all-people [{:person/name "Bob",
+;                   :person/age 22,}]}]
+;                   :all-people [#:person{:id 1} #:person{:id 2}]}]}]
+;                  {:person/name "Sally",}}]}]
+;                   :person/age 26,}]}]
+;                   :all-people [#:person{:id 1} #:person{:id 2}]}]}]
 ----
 +
 *** on of nice examples of it is using `:server/time` global resolver ({yt-fulcro-6t}43m32s[43:32])
 +
 [source,clojure]
 ----
-[{:all-people [:app.specs.person/name
+[{:all-people [:person/name
                :server/time]}]
 ; => {:all-people
 ;     [{:server/time #inst "2023-01-19T21:33:54.233-00:00",
-;       :app.specs.person/name "Bob"}
+;       :person/name "Bob"}
 ;      {:server/time #inst "2023-01-19T21:33:54.233-00:00",
-;       :app.specs.person/name "Sally"}]}
+;       :person/name "Sally"}]}
 ----
 +
 *** _"global resolvers are particularly handy since fulcro gives you normalization being able
@@ -472,7 +475,7 @@ video::{yt-fulcro-6-id}[youtube, start=0, end=, width=1280, height=720]
 ** {yt-fulcro-6t}50m05s[50:05] - be very careful what is returned from remote mutation
 *** e.g. returning `(java.util.BitSet.)` breaks mutation ({yt-fulcro-6t}?t=53m24s[53:24])
 *** keyword, empty map, whatever can be transcoded by transit is fine
-*** you can also return something like an id `{::person/id id}` so Pathom could do more magic (some advanced tricks) ({yt-fulcro-6t}54m20s[54:20])
+*** you can also return something like an id `{:person/id id}` so Pathom could do more magic (some advanced tricks) ({yt-fulcro-6t}54m20s[54:20])
 
 
 ==== Notes ====
@@ -487,6 +490,12 @@ video::{yt-fulcro-6-id}[youtube, start=0, end=, width=1280, height=720]
 * *part-6: Make the app fullstack*
 ** uses newer version of fulcro 2.4.0
 ** to make exceptions visible I added `p/env-plugin` with function under `::p/process-error` key
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+=== link:{yt-fulcro-7}[Fulcro – Part 7 : Full Stack Operations Over Time] ===
+
+video::{yt-fulcro-7-id}[youtube, start=0, end=, width=1280, height=720]
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
