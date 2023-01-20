@@ -1,6 +1,5 @@
 (ns app.model.person
   (:require
-   [com.fulcrologic.fulcro.data-fetch :as df]
    [com.fulcrologic.fulcro.mutations :refer [defmutation]]))
 
 (defn person-path [& ks] (into [:person/id] ks))
@@ -15,5 +14,4 @@
 (defmutation select-person [{:keys [query-class]
                              :person/keys [id] :as params}]
   (action [{:keys [app state]}]
-    (swap! state assoc-in (picker-path :person-picker/selected-person) [:person/id id])
-    (df/load! app [:person/id id] query-class)))
+    (swap! state assoc-in (picker-path :person-picker/selected-person) [:person/id id])))
