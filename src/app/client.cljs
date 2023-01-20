@@ -1,6 +1,6 @@
 (ns app.client
   (:require
-   [app.model.person :refer [make-older picker-path select-person]]
+   [app.model.person :refer [make-older select-person]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.data-fetch :as df]
@@ -48,8 +48,8 @@
   (li :.item
       (a {:href    "#"
           :onClick (fn []
-                     (df/load! this [:person/id id] PersonDetail
-                        {:target (picker-path :person-picker/selected-person)}))}
+                     (comp/transact! this [(select-person {:query-class PersonDetail
+                                                           :person/id id})]))}
          name)))
 
 (def ui-person-list-item (comp/factory PersonListItem {:keyfn :person/id}))

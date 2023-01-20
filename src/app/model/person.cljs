@@ -1,5 +1,6 @@
 (ns app.model.person
   (:require
+   [com.fulcrologic.fulcro.mutations :as m]
    [com.fulcrologic.fulcro.mutations :refer [defmutation]]))
 
 (defn person-path [& ks] (into [:person/id] ks))
@@ -14,4 +15,8 @@
 (defmutation select-person [{:keys [query-class]
                              :person/keys [id] :as params}]
   (action [{:keys [app state]}]
-    (swap! state assoc-in (picker-path :person-picker/selected-person) [:person/id id])))
+    (swap! state assoc-in (picker-path :person-picker/selected-person) [:person/id id]))
+  (remote [env]
+          (-> env
+              (m/with-params {:person/id id})
+              (m/returning query-class))))
