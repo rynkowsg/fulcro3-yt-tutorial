@@ -11,6 +11,7 @@
 :yt-fulcro-5-id: JBy_htHxygo
 :yt-fulcro-6-id: F7QzFpo8pA0
 :yt-fulcro-7-id: wuOnP5yufxU
+:yt-fulcro-8-id: Bistiamcz8Y
 
 :yt-fulcro-1: https://www.youtube.com/watch?v={yt-fulcro-1-id}
 :yt-fulcro-2: https://www.youtube.com/watch?v={yt-fulcro-2-id}
@@ -19,6 +20,7 @@
 :yt-fulcro-5: https://www.youtube.com/watch?v={yt-fulcro-5-id}
 :yt-fulcro-6: https://www.youtube.com/watch?v={yt-fulcro-6-id}
 :yt-fulcro-7: https://www.youtube.com/watch?v={yt-fulcro-7-id}
+:yt-fulcro-8: https://www.youtube.com/watch?v={yt-fulcro-8-id}
 
 :yt-fulcro-1t: https://youtu.be/{yt-fulcro-1-id}?t=
 :yt-fulcro-2t: https://youtu.be/{yt-fulcro-2-id}?t=
@@ -27,6 +29,7 @@
 :yt-fulcro-5t: https://youtu.be/{yt-fulcro-5-id}?t=
 :yt-fulcro-6t: https://youtu.be/{yt-fulcro-6-id}?t=
 :yt-fulcro-7t: https://youtu.be/{yt-fulcro-7-id}?t=
+:yt-fulcro-8t: https://youtu.be/{yt-fulcro-8-id}?t=
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -733,6 +736,18 @@ means "take the edge `:all-people` from the server and make this the edge `[:com
 * *part-7: Update on select-person: option 3*
 * *part-7: Update on select-person: option 4*
 * *part-7: Update on select-person: option 5*
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+=== link:{yt-fulcro-8}[Fulcro – Part 8 : Reasoning about Loads (over time)] ===
+
+video::{yt-fulcro-8-id}[youtube, start=0, end=, width=1280, height=720]
+
+==== Content ====
+
+==== Notes ====
+
+==== Commits ====
 
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
