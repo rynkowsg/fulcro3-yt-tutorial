@@ -497,6 +497,243 @@ video::{yt-fulcro-6-id}[youtube, start=0, end=, width=1280, height=720]
 
 video::{yt-fulcro-7-id}[youtube, start=0, end=, width=1280, height=720]
 
+==== Content ====
+
+Continue discussing full-stack story of fulcro and some nuances.
+
+* IDE setup of Tony
+** {yt-fulcro-7t}00m10s[00:10] - resolve `defsc` as `defsc` from fulcro2 (`fulcro.client.primitives`)
+*** same for defmutation
+
+* about fulcro macros
+** {yt-fulcro-7t}01m41s[01:41] - `defmutation` can be written down as a multimethod
+** {yt-fulcro-7t}03m40s[03:40] - `defsc` can be defined as a function
+
+* {yt-fulcro-7t}04m32s[04:32] - why it is worth to have these as macros
+** in big scale symbols resolution & IDE navigation matter
+** e.g. in Redux where everything is defined by strings, when you want to jump to the bit that executes that action string, you must know where it is or grep it to find it
+*** development env doesn't support it by default
+
+* {yt-fulcro-7t}05m38s[05:38] - discussing refactoring done by Tony
+
+** {yt-fulcro-7t}06m04s[06:04] - discussing `Root` component
+
+** {yt-fulcro-7t}07m20s[07:20] - discussing necessity to have an edge within component (in most of the cases)
+
+** {yt-fulcro-7t}10m14s[10:14] - continue of discussing code
+
+** {yt-fulcro-7t}11m47s[11:47] - another place where it is tempting to steal the query
+
+** {yt-fulcro-7t}12m15s[12:15] - discussing code: Root, PersonList, PersonListItem, PersonDetail
+
+** {yt-fulcro-7t}18m47s[18:47] - discussing code: selecting people
+
+* {yt-fulcro-7t}32m43s[32:43] - {yt-fulcro-7t}33m42s[33:42] - if network request hangs on the server, requests are queed, if one hangs, the rest can hang
+
+* {yt-fulcro-7t}33m42s[33:42] - discussing code: selecting people (cd option 4)
+
+* {yt-fulcro-7t}38m00s[38:00] - discussing code: selecting people (cd option 5)
+
+* {yt-fulcro-7t}40m03s[40:03] - final words on options available
+
+
+==== Notes ====
+
+===== on macros =====
+
+* mutations are multimethods internally ({yt-fulcro-7t}01m41s[01:41])
+** mutation can be written down as a multimethod
++
+[source,clojure]
+----
+(defmethod m/mutate `make-older [env]
+   {:action (fn [env])
+    :remote (fn [_] true)})
+----
++
+*** but this way `make-older` show up as an unknown symbols, because it is only a piece of data
+*** _"there is no way to make IDE to understand that that multimethod symbol resolution is that mutation"_
+*** whereas if it is a macro, it is possible to check syntax and use "resolve as", it indexes it and allows to jump to it
+
+* `defsc` can be defined as a function ({yt-fulcro-7t}03m40s[03:40])
+** plus `(comp/configure-Component)` must be called
++
+[source,clojure]
+----
+(defn PersonDetail [] ...)
+(comp/configure-component! PersonDetail {})
+----
++
+** but obviously with macro, doing it, it is much easier
+
+===== `Root` component, data model programming =====
+
+* `Root` component is special ({yt-fulcro-7t}06m04s[06:04])
+** typically we link it to the thing we are interested in
+
+* it's possible to pass in `:query` the `comp/get-query` from the only child only, like that ({yt-fulcro-7t}06m18s[06:18]):
++
+[source,clojure]
+----
+(defsc Root [this props]
+  {:query         (fn [_] (comp/get-query PersonPicker))
+   :initial-state (fn [_]) {:root/person-picker {}}}
+  (div :.ui.container.segment
+    (h3 "Application")
+    (ui-person-picker props)))
+----
++
+** but it's a big mistake
+*** no checking, no magic
+*** with refresh, in the query there is metadata telling from which component that query came from.
+    With this trick (returning query directly), we made that metadata mismatch the component it's coming from ({yt-fulcro-7t}07m40s[07:40]).
+*** golden rule: #_"Don't return the other components query as your own."_#
+**** _"always make up an edge, in a join to go down a level"_
+**** _"that rule is sort of flexible. You could have a component in the middle that is completely stateless, that has no query ident or anything, it is just acting as a React component transmitting data through it but they're not asking for any of its own."_
+**** _"For the most part if you want to move from one layer to the next there has to be a join and the joint has to use an invented key, and part of making it tractable is initial state healing or setting up these edges for you as the application starts."_
+**** _"As the application runs of course you're responsible for making these edges exist in your reified data here in the database and that's one of the central tasks of doing any programming in fulcro."_
+**** _"#In Fulcro you're not UI programming as much as are data model programming# which is much better thing to do in my opinion and a much easier to test_
+*** _"Don't steal queries"_ ({yt-fulcro-7t}09m50s[09:50])
+*** _"Don't mismatch queries"_ ({yt-fulcro-7t}09m55s[09:55])
+
+===== misc & query-only components =====
+
+* {yt-fulcro-7t}13m13s[13:13] - components can have the same ident (example of `PersonListItem` & `PersonDetail`)
+* {yt-fulcro-7t}14m51s[14:51] - df/load takes A from backend and put to B in the local database
+** that code
++
+[source,clojure]
+----
+(df/load! app :all-people PersonListItem
+  {:target [:component/id :person-list :person-list/people]})
+----
+means "take the edge `:all-people` from the server and make this the edge `[:component/id :person-list :person-list/people]` in my graph"
+
+* {yt-fulcro-7t}16m14s[16:14] - the second use of :query is to specify what we need from the server
+
+* {yt-fulcro-7t}16m20s[16:20] - query-only component
+** `defsc` might have no UI, only query - it will still fetch from the backend what is specified in query when loaded
++
+[source,clojure]
+----
+(defsc PersonQuery [_ _]
+  {:query [:person/id :person/age]
+   :ident :person/id})
+----
+** _"never ever use query-only component in a UI position."_
+** _"You can use it in load"_ (in `df/load`)
+** query-only components might be used for pre-caching
+
+* {yt-fulcro-7t}32m43s[32:43] - {yt-fulcro-7t}33m42s[33:42] - if network request hangs on the server, requests are queed, if one hangs, the rest can hang
+
+===== discuss selecting people =====
+
+* option 1: pass 'query-class' to mutation
+** cons ({yt-fulcro-7t}25m35s[25:35])
+*** _"it puts React class intro out transaction, which could be a remote thing. We don't know from the UI layer. So if you put data into transaction that is not serializable via transit you'll get transit errors and the thing will fail"_
+
+* option 2: call `df/load` directly from component
+** cons ({yt-fulcro-7t}26m42s[26:42])
+*** there are still two transactions
+
+* option 3: `df/load` directly from component with `:target`
+** cons ({yt-fulcro-7t}27m54s[27:54])
+*** _"exposes to this particular PersonList exactly what needs to be done (...) in kind of a non component-local sense, so you're peppering some logic in there"_
+** request:
++
+[source,clojure]
+----
+[{[:person/id 2]
+  [:person/id
+   :person/name
+   :person/age
+   {:person/cars [:car/id :car/model]}]}]
+----
++
+** response:
++
+[source,clojure]
+----
+{[:person/id 2]
+ {:person/id 2,
+  :person/name "Sally",
+  :person/age 28,
+  :person/cars [{:car/id 1, :car/model "Accord"}]}}
+----
++
+* option 4a: ({yt-fulcro-7t}28m15s[28:15])
+
+* in fulcro lang prefixing a keyword with `:ui/` will cause that that keyword would not go from query to remotes ({yt-fulcro-7t}34m29s[34:29])
+
+* option 4b ({yt-fulcro-7t}35m20s[35:20]):
+** on client:
+*** pass query-class to mutation, but under the clients mutation `:remote`, say to pass only id, and return from remote the query-class
+** on server:
+*** make the select-person mutation, to take map with `:person/id` and return map with `:person/id`
+** with this approach, fulcro combines the `select-person` mutation with `person-resolver`
+** _"it indicates fulcro that the remote mutation can return stuff and here's the stuff that I'd like it to return"_
+** on the server, all _"resolvers that work with `:person/id` as an input (...) can run to fulfill the rest of any query that happens to be sitting on the backend of this mutation"_
+*** the request sent:
++
+[source,clojure]
+----
+[{(app.model.person/select-person {:person/id 2})
+  [:person/id
+   :person/name
+   :person/age
+   {:person/cars [:car/id :car/model]}]}]
+----
++
+**** call is the key
+**** subquery of the join is "I want :person/id ..."
+*** response:
++
+[source,clojure]
+----
+{app.model.person/select-person
+ {:person/id 2,
+  :person/name "Sally",
+  :person/age 28,
+  :person/cars [{:car/id 1, :car/model "Accord"}]}}
+----
+** {yt-fulcro-7t}37m26s[37:26] - _"pathom (...) did that for us because we gave it enough context and the return value of the mutation that the return query on the mutation can be satisfied. And Fulcro understands from that metadata on the query of that component where to put it and how to normalize it, so we're essentially overwriting those elements as we go"_
+
+** con (({yt-fulcro-7t}38m18s[38:18])):
+*** passing `:query-class` to mutation is not that nice
+
+* option 5 ({yt-fulcro-7t}38m00s[38:00]):
+** we can achieve the same effect with making this from `comp/transact!`
+** we need to pass the exact query we need to `comp/transact!`
++
+[source,clojure]
+----
+(comp/transact! this [{(select-person {:person/id id})
+                       (comp/get-query PersonDetail)}])
+----
++
+*** _"so now I'm saying run this mutation and if it happens to be remote merge the remote return value via this person details query. Well, query for it this way and merge it"_
+
+** in this particular case, Tony would choose option 3 with the `df/load`
+
+* pros/cons of both solutions
+** option 3
+*** pros: "it had the clearest semantics particularly since we don't need to reify the idea of selection"
+*** cons: to test _"you kind of have to have a real browser click"_
+** option 5
+*** pros: "the select is now mutation that could be used for generative testing like you could simulate clicking on someone by invoking that  mutation"
+*** cons: it requires artificial mutation on backend
+
+
+==== Commits ====
+
+* *part-7: Sync codebase to beginning of part-7*
+* *part-7: Connect to the backend*
+* *part-7: Update on select-person: option 1*
+* *part-7: Update on select-person: option 2*
+* *part-7: Update on select-person: option 3*
+* *part-7: Update on select-person: option 4*
+* *part-7: Update on select-person: option 5*
+
 //''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 == Writing this doc ==
