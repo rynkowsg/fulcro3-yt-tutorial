@@ -34,11 +34,7 @@
   (swap! people update-in [id :person/age] inc)
   {})                                                       ;; the empty map is returned here intentionally
 
-(pc/defmutation select-person [env {:person/keys [id]}]
-  {::pc/params [:person/id]}
-  {:person/id id})
-
-(def resolvers [person-resolver all-people-resolver make-older select-person])
+(def resolvers [person-resolver all-people-resolver make-older])
 
 (comment
  (app.server/parser {} [{[:person/id 2] [:person/name]}])
