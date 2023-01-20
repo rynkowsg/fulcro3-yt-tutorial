@@ -3,6 +3,7 @@
    [app.model.person :refer [make-older select-person]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+   [com.fulcrologic.fulcro.data-fetch :as df]
    [com.fulcrologic.fulcro.dom :as dom :refer [a button div h3 label li ul]]
    [com.fulcrologic.fulcro.networking.http-remote :as http]))
 
@@ -89,7 +90,9 @@
     (ui-person-picker person-picker)))
 
 (defonce APP (app/fulcro-app {:remotes          {:remote (http/fulcro-http-remote {:url "/api"})}
-                              :client-did-mount (fn [app])}))
+                              :client-did-mount (fn [app]
+                                                  (df/load! app :all-people PersonListItem
+                                                            {:target [:component/id :person-list :person-list/people]}))}))
 
 (defn ^:export init []
   (app/mount! APP Root "app")
