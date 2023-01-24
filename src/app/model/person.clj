@@ -12,6 +12,11 @@
             :person/age  26
             :person/cars #{1}}}))
 
+(comment
+ (swap! people assoc-in [1 :person/age] 99)
+ (swap! people assoc-in [1 :person/name] "Tony")
+ (swap! people update 1 dissoc :person/age))
+
 (pc/defresolver person-resolver [env {:person/keys [id] :as params}]
   {::pc/input  #{:person/id}
    ::pc/output [:person/name :person/age {:person/cars [:car/id]}]}

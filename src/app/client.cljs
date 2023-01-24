@@ -102,3 +102,6 @@
 (defn ^:export refresh []
   (app/mount! APP Root "app")
   (js/console.log "Hot reload"))
+
+(comment
+ (df/load! APP [:person/id 1] PersonListItem))
