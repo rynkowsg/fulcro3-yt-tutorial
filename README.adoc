@@ -739,18 +739,6 @@ means "take the edge `:all-people` from the server and make this the edge `[:com
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-=== link:{yt-fulcro-8}[Fulcro – Part 8 : Reasoning about Loads (over time)] ===
-
-video::{yt-fulcro-8-id}[youtube, start=0, end=, width=1280, height=720]
-
-==== Content ====
-
-==== Notes ====
-
-==== Commits ====
-
-//''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
 == Writing this doc ==
 
 I've been processing the all AsciiDoc files with command:
