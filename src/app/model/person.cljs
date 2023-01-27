@@ -9,9 +9,8 @@
 (defmutation make-older [{:person/keys [id] :as params}]
   (action [{:keys [state]}]
     (swap! state update-in (person-path id :person/age) inc))
-  (result-action [{:keys [state] :as env}]
-    (let [v (-> env :result :body (get-in [`make-older :result]))]
-      (swap! state assoc :BOO v)))
+  (ok-action [env] (js/console.log "OK"))
+  (error-action [env] (js/console.log "BAD!"))
   (remote [env] true))
 
 (defmutation select-person [{:person/keys [id] :as params}]
