@@ -10,7 +10,7 @@
   (action [{:keys [state]}]
     (swap! state update-in (person-path id :person/age) inc))
   (result-action [env]
-    (js/console.log (:result env)))
+    (js/console.log (-> env :result :body (get `make-older))))
   (remote [env] true))
 
 (defmutation select-person [{:person/keys [id] :as params}]
