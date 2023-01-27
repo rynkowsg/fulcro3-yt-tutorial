@@ -10,7 +10,7 @@
   (action [{:keys [state]}]
     (swap! state update-in (person-path id :person/age) inc))
   (result-action [env]
-    (js/console.log (keys env)))
+    (js/console.log (:result env)))
   (remote [env] true))
 
 (defmutation select-person [{:person/keys [id] :as params}]
