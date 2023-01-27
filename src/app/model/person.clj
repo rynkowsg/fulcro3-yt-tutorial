@@ -37,7 +37,7 @@
   {::pc/params [:person/id]
    ::pc/output []}
   (swap! people update-in [id :person/age] inc)
-  {})                                                       ;; the empty map is returned here intentionally
+  {:result 42})                                             ;; the empty map is returned here intentionally
 
 (def resolvers [person-resolver all-people-resolver make-older])
 
