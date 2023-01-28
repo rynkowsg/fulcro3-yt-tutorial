@@ -1,9 +1,6 @@
 (ns app.server
   (:require
-   [app.model.car :as car]
-   [app.model.person :as person]
-   [clojure.core.async :as a]
-   [clojure.core.async :as async]
+   [app.model.item :as item]
    [com.fulcrologic.fulcro.server.api-middleware :as fmw :refer [not-found-handler wrap-api]]
    [com.wsscode.pathom.connect :as pc]
    [com.wsscode.pathom.core :as p]
@@ -19,7 +16,7 @@
 #_(current-system-time {} {})
 
 
-(def my-resolvers [car/resolvers person/resolvers current-system-time])
+(def my-resolvers [current-system-time item/resolvers])
 
 ;; setup for a given connect system
 (def parser
@@ -49,8 +46,7 @@
 
 (comment
  ;; query Pathom index:
- (parser {} [{:all-people [:person/name
-                           :person/age
-                           {:all-people [:person/id]}]}])
+ (parser {} [:item/all-items])
+ (parser {} [{:item/all-items [:item/id :item/price]}])
 
  (parser {} [:server/time]))
